@@ -191,7 +191,7 @@ void dtree_printd(int level, const char *fmt, ...) {
   if (level & DTREE_PRINT_ENABLED) {
     va_start(ap, fmt);
 
-    vprintf(fmt, ap);
+    vfprintf(stderr, fmt, ap);
 
     va_end(ap);
   }

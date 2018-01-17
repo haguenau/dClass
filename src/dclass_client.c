@@ -41,7 +41,6 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,
   int pos = 0;
   int rpos = 0;
   unsigned int hash;
-  char buf[DTREE_DATA_BUFLEN];
   const char *p;
   const char *token = "";
   packed_ptr pp;
@@ -82,10 +81,31 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,
       // EOT found
       fbnode = dtree_get_node(h, token, 0, 0);
 
+#if DTREE_DEBUG_LOGGING
+      static char buf[DTREE_DATA_BUFLEN];
+
+      unsigned flags = fbnode ? (int)fbnode->flags : 0;
+      char *flag_token =  flags & DTREE_DT_FLAG_TOKEN  ? "TOKEN"  : "-";
+      char *flag_strong = flags & DTREE_DT_FLAG_STRONG ? "STRONG" : "-";
+      char *flag_weak =   flags & DTREE_DT_FLAG_WEAK   ? "WEAK"   : "-";
+      char *flag_none =   flags & DTREE_DT_FLAG_NONE   ? "NONE"   : "-";
+      char *flag_chain =  flags & DTREE_DT_FLAG_CHAIN  ? "CHAIN"  : "-";
+      char *flag_bchain = flags & DTREE_DT_FLAG_BCHAIN ? "BCHAIN" : "-";
+
+      if (!fbnode) {
+        flags = -1;
+      }
+
       dtree_printd(DTREE_PRINT_CLASSIFY,
-                   "dtree_classify() token %d(%d): '%s' = '%s':%d\n", pos, rpos,
-                   token, fbnode ? dtree_node_path(h, fbnode, buf) : "",
-                   fbnode ? (int)fbnode->flags : 0);
+                   "dtree_classify() token %d(%d): '%s'\n"
+                   "  Path:  '%s'\n"
+                   "  Flags: %d = (%s %s %s %s %s %s)\n",
+                   pos, rpos, token,
+                   fbnode ? dtree_node_path(h, fbnode, buf) : "",
+                   flags,
+                   flag_token, flag_strong, flag_weak,
+                   flag_none, flag_chain, flag_bchain);
+#endif
 
       if (fbnode && dtree_get_flag(h, fbnode, DTREE_DT_FLAG_TOKEN, pos)) {
         if ((fnode = dtree_get_flag(h, fbnode, DTREE_DT_FLAG_STRONG, pos)))

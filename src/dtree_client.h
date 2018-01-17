@@ -34,17 +34,25 @@
 #include <stdlib.h>
 
 // logging and testing
+#ifndef DTREE_TEST_UALOOKUP
 #define DTREE_TEST_UALOOKUP 1
+#endif
+#ifndef DTREE_PERF_WALKING
 #define DTREE_PERF_WALKING 0
+#endif
+#ifndef DTREE_DEBUG_LOGGING
 #define DTREE_DEBUG_LOGGING 0
+#endif
 
 #define DTREE_PRINT_GENERIC (1 << 0)
 #define DTREE_PRINT_CLASSIFY (1 << 1)
 #define DTREE_PRINT_INITDTREE (1 << 2)
 
 // what messages to print, DEBUG_LOGGING needs to be enabled
-#define DTREE_PRINT_ENABLED                                                    \
+#ifndef DTREE_PRINT_ENABLED
+#define DTREE_PRINT_ENABLED \
   (DTREE_PRINT_GENERIC | DTREE_PRINT_CLASSIFY | DTREE_PRINT_INITDTREE)
+#endif
 
 // if enabled, this packs system pointers into 16/32 bits
 #ifndef DTREE_DT_PACKED
